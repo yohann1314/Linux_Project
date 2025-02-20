@@ -26,89 +26,121 @@ Exécuter le script principal :
 
 ### 📌 1. Menu Principal (main.sh)
 
-Ce script est l'entrée principale du projet. Il affiche un menu interactif permettant d'accéder aux différentes fonctionnalités.
+#### 📌 Fonctionnalité :
+Le menu principal permet de naviguer facilement entre les différentes options du programme.
 
-Propose les options suivantes :
+#### ⚙️ Implémentation :
 
-- Gestion des utilisateurs et groupes
+- Utilisation d’une boucle while pour afficher le menu en continu.
+- Lecture du choix utilisateur avec read.
+- Utilisation d’un case pour exécuter les scripts correspondants en fonction du choix.
 
-- Automatisation des tâches (cron)
+#### 📌 Exemple de code :
 
-- Surveillance système
-
-- Sauvegarde des fichiers
-
-- Configuration de la journalisation
-
-- Quitter
+```bash
+Copier
+Modifier
+while true; do
+    echo "1. Gestion des utilisateurs"
+    read -p "Choisissez une option : " choix
+    case $choix in
+        1) ./gts_utilisateurs.sh ;;
+        2) exit 0 ;;
+    esac
+done
+```
 
 ### 👤 2. Gestion des Utilisateurs (gts_utilisateurs.sh)
 
-Permet de gérer les utilisateurs et groupes sous Linux avec un menu interactif.
+#### 📌 Fonctionnalité :
+Ajout, suppression et gestion des utilisateurs Linux.
 
-#### ✅ Fonctionnalités :
+#### ⚙️ Implémentation :
 
-- Créer et supprimer des utilisateurs
-
-- Créer des groupes
-
-- Lister les utilisateurs
-
-- Ajouter un utilisateur à un groupe
-
-- Définir un quota utilisateur
-
-- Configurer l'accès sudo
+- Utilisation de adduser pour ajouter un utilisateur.
+- Utilisation de deluser pour supprimer un utilisateur.
+- Utilisation de cat /etc/passwd pour lister les utilisateurs.
+#### 📌 Exemple de code :
+```bash
+Copier
+Modifier
+read -p "Nom de l'utilisateur à ajouter : " user
+sudo adduser "$user"
+```
 
 ### ⏳ 3. Gestion des Tâches Planifiées (gts_cron.sh)
 
-Ce script facilite la gestion des tâches automatisées via cron.
+#### 📌 Fonctionnalité :
+Automatisation des tâches grâce à cron.
 
-#### ✅ Fonctionnalités :
+#### ⚙️ Implémentation :
 
-- Afficher les tâches cron existantes
+- Utilisation de crontab -l pour afficher les tâches existantes.
+- Ajout d’une tâche avec echo "0 3 * * * script.sh" | crontab -.
+- Suppression d’une tâche via crontab -e.
 
-- Ajouter une nouvelle tâche cron
-
-- Supprimer une tâche cron spécifique
+#### 📌 Exemple de code :
+```bash
+Copier
+Modifier
+echo "0 3 * * * /path/to/script.sh" | crontab -
+```
 
 ### 📊 4. Surveillance du Système (gts_surveillance.sh)
 
 Permet de surveiller les ressources système et l'état des processus.
 
-#### ✅ Fonctionnalités :
+#### 📌 Fonctionnalité :
+Affichage des ressources système comme l’espace disque et les processus en cours.
 
-- Afficher l’espace disque utilisé
+#### ⚙️ Implémentation :
 
-- Lister les processus actifs
+- Utilisation de df -h pour afficher l’espace disque.
+- Utilisation de ps aux --sort=-%mem | head -6 pour lister les processus gourmands.
 
-- Surveiller l’utilisation de la mémoire
+#### 📌 Exemple de code :
+```bash
+Copier
+Modifier
+df -h
+ps aux --sort=-%mem | head -6
+```
 
 ### 💾 5. Sauvegarde des Dossiers (gts_sauvegarde.sh)
 
 Automatise la sauvegarde des fichiers et dossiers avec la possibilité de définir des tâches récurrentes.
 
-#### ✅ Fonctionnalités :
+#### 📌 Fonctionnalité :
+Créer des archives .tar.gz pour sauvegarder des fichiers.
 
-- Sauvegarde manuelle d’un dossier
+#### ⚙️ Implémentation :
 
-- Planification d’une sauvegarde automatique via cron
+- Utilisation de tar -czvf backup.tar.gz /chemin/du/dossier.
 
-- Affichage et suppression des tâches de sauvegarde
+#### 📌 Exemple de code :
+```bash
+Copier
+Modifier
+tar -czvf backup.tar.gz /home/user/Documents
+```
 
 ### 📝 6. Journalisation Système (gts_journalisation.sh)
 
 Facilite la configuration et la gestion des logs système avec rsyslog.
 
-#### ✅ Fonctionnalités :
+#### 📌 Fonctionnalité :
+Consulter les logs système et configurer rsyslog.
 
-- Vérifier et installer rsyslog
+#### ⚙️ Implémentation :
 
-- Configurer la journalisation centralisée
-
-- Mettre en place une rotation des journaux
-
-- Activer la journalisation avancée pour certains services critiques (SSH, Apache, MySQL)
+- Utilisation de tail -n 20 /var/log/syslog pour afficher les logs récents.
+- Configuration avancée via rsyslog.conf.
+#### 📌 Exemple de code :
+```bash
+Copier
+Modifier
+tail -n 20 /var/log/syslog
+```
 
 ## 🛠️ Prérequis
 
