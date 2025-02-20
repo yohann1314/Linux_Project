@@ -38,8 +38,6 @@ Le menu principal permet de naviguer facilement entre les différentes options d
 #### 📌 Exemple de code :
 
 ```bash
-Copier
-Modifier
 while true; do
     echo "1. Gestion des utilisateurs"
     read -p "Choisissez une option : " choix
@@ -62,8 +60,6 @@ Ajout, suppression et gestion des utilisateurs Linux.
 - Utilisation de cat /etc/passwd pour lister les utilisateurs.
 #### 📌 Exemple de code :
 ```bash
-Copier
-Modifier
 read -p "Nom de l'utilisateur à ajouter : " user
 sudo adduser "$user"
 ```
@@ -81,9 +77,7 @@ Automatisation des tâches grâce à cron.
 
 #### 📌 Exemple de code :
 ```bash
-Copier
-Modifier
-echo "0 3 * * * /path/to/script.sh" | crontab -
+echo "0 3 * * * /path/to/file.txt" | crontab -
 ```
 
 ### 📊 4. Surveillance du Système (gts_surveillance.sh)
@@ -100,8 +94,6 @@ Affichage des ressources système comme l’espace disque et les processus en co
 
 #### 📌 Exemple de code :
 ```bash
-Copier
-Modifier
 df -h
 ps aux --sort=-%mem | head -6
 ```
@@ -119,8 +111,6 @@ Créer des archives .tar.gz pour sauvegarder des fichiers.
 
 #### 📌 Exemple de code :
 ```bash
-Copier
-Modifier
 tar -czvf backup.tar.gz /home/user/Documents
 ```
 
@@ -137,8 +127,6 @@ Consulter les logs système et configurer rsyslog.
 - Configuration avancée via rsyslog.conf.
 #### 📌 Exemple de code :
 ```bash
-Copier
-Modifier
 tail -n 20 /var/log/syslog
 ```
 
