@@ -9,7 +9,7 @@ Ce projet propose une série de scripts bash permettant de gérer efficacement u
 Cloner le dépôt :
 ```bash
 git clone https://github.com/yohann1314/Linux_Project.git
-cd votre-repo
+cd Linux_Project/
 ```
 
 Rendre les scripts exécutables :
