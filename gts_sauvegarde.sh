@@ -25,6 +25,7 @@ menu_sauvegarde() {
 
 # Fonction pour sauvegarder un dossier (manuelle)
 sauvegarde_manuelle() {
+    sudo touch "$SAUVEGARDE_DIR"
     echo -n "Entrez le chemin du dossier à sauvegarder : "
     read -r dossier
     if [[ -d "$dossier" ]]; then
@@ -33,6 +34,7 @@ sauvegarde_manuelle() {
         cp -r "$dossier" "$sauvegarde_dir"
         
         # Enregistrer la sauvegarde manuelle dans un fichier log
+        touch "$SAUVEGARDE_DIR/sauvegardes_log.txt"
         echo "Sauvegarde manuelle de $dossier effectuée à $timestamp" >> "$SAUVEGARDE_DIR/sauvegardes_log.txt"
         
         echo -e "${GREEN}Sauvegarde terminée : $sauvegarde_dir${NC}"
@@ -74,18 +76,47 @@ lister_sauvegardes() {
 
 # Fonction pour supprimer une tâche cron
 supprimer_tache_cron() {
-    echo -e "${GREEN}=== Tâches actuelles ===${NC}"
-    crontab -l | grep 'cp -r'
-    echo -n "Entrez la ligne exacte de la tâche à supprimer : "
-    read -r ligne
+    echo -e "${GREEN}=== Tâches Cron actuelles ===${NC}"
 
-    # Vérifier si la tâche existe dans le crontab
-    if crontab -l | grep -qF "$ligne"; then
-        # Supprimer la tâche
-        (crontab -l | grep -vF "$ligne") | crontab -
-        echo -e "${GREEN}Tâche supprimée avec succès.${NC}"
+    # Afficher toutes les tâches cron existantes
+    taches=$(crontab -l)
+    
+    if [[ -z "$taches" ]]; then
+        echo -e "${RED}Aucune tâche Cron trouvée.${NC}"
+        return
+    fi
+    
+    # Affichage des tâches actuelles avec un index
+    echo -e "${CYAN}Tâches Cron actuelles :${NC}"
+    echo "$taches" | nl -s ') ' -w 2
+    
+    # Demander à l'utilisateur de saisir le numéro de la tâche à supprimer
+    echo -n "Entrez le numéro de la tâche à supprimer : "
+    read -r numero
+
+    # Vérifier si le numéro est valide
+    if [[ "$numero" =~ ^[0-9]+$ ]]; then
+        # Obtenir la tâche sélectionnée en utilisant 'nl' pour l'indexation
+        ligne_a_supprimer=$(echo "$taches" | sed -n "${numero}p")
+
+        # Vérifier si la tâche existe réellement
+        if [[ -n "$ligne_a_supprimer" ]]; then
+            # Demander une confirmation avant suppression
+            echo -n "Êtes-vous sûr de vouloir supprimer la tâche suivante :\n$ligne_a_supprimer\n(y/n) : "
+            read -r confirmation
+            
+            if [[ "$confirmation" =~ ^[Yy]$ ]]; then
+                # Supprimer la tâche
+                (crontab -l | grep -vF "$ligne_a_supprimer") | crontab -
+                echo -e "${GREEN}Tâche supprimée avec succès.${NC}"
+            else
+                echo -e "${YELLOW}Suppression annulée.${NC}"
+            fi
+        else
+            echo -e "${RED}Erreur : La tâche spécifiée n'existe pas.${NC}"
+        fi
     else
-        echo -e "${RED}Erreur : La tâche spécifiée n'existe pas.${NC}"
+        echo -e "${RED}Erreur : Numéro invalide.${NC}"
     fi
 }
 
