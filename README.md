@@ -6,9 +6,9 @@ Ce projet propose une série de scripts bash permettant de gérer efficacement u
 
 ## 🚀 Installation
 
-Cloner le dépôt (si applicable) :
+Cloner le dépôt :
 ```bash
-git clone https://github.com/votre-repo.git
+git clone https://github.com/yohann1314/Linux_Project.git
 cd votre-repo
 ```
 
@@ -28,9 +28,7 @@ Exécuter le script principal :
 
 Ce script est l'entrée principale du projet. Il affiche un menu interactif permettant d'accéder aux différentes fonctionnalités.
 
-- Vérifie que tous les scripts nécessaires sont exécutables.
-
-- Propose les options suivantes :
+Propose les options suivantes :
 
 - Gestion des utilisateurs et groupes
 
