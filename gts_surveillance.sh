@@ -21,7 +21,7 @@ menu_surveillance() {
 # Fonction pour surveiller l'espace disque
 surveillance_espace_disque() {
     echo -e "${GREEN}=== Espace disque ===${NC}"
-    df -h | awk 'NR==1 || $5+0 > 80 {print $0}' # Affiche les partitions avec >80% d'utilisation
+    df -h
 }
 
 # Fonction pour lister les processus actifs

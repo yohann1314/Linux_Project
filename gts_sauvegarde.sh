@@ -17,26 +17,31 @@ menu_sauvegarde() {
     echo -e "==============================${NC}"
     echo "1. Sauvegarde manuelle d'un dossier"
     echo "2. Configurer une sauvegarde automatique"
-    echo "3. Lister les tâches de sauvegarde existantes"
+    echo "3. Lister les sauvegardes existantes"
     echo "4. Supprimer une tâche de sauvegarde"
     echo "5. Quitter"
     echo -n "Choisissez une option : "
 }
 
-# Fonction pour sauvegarder un dossier
+# Fonction pour sauvegarder un dossier (manuelle)
 sauvegarde_manuelle() {
     echo -n "Entrez le chemin du dossier à sauvegarder : "
     read -r dossier
     if [[ -d "$dossier" ]]; then
         timestamp=$(date +'%Y%m%d_%H%M%S')
-        cp -r "$dossier" "$SAUVEGARDE_DIR/sauvegarde_$timestamp"
-        echo -e "${GREEN}Sauvegarde terminée : ${SAUVEGARDE_DIR}/sauvegarde_$timestamp${NC}"
+        sauvegarde_dir="$SAUVEGARDE_DIR/sauvegarde_$timestamp"
+        cp -r "$dossier" "$sauvegarde_dir"
+        
+        # Enregistrer la sauvegarde manuelle dans un fichier log
+        echo "Sauvegarde manuelle de $dossier effectuée à $timestamp" >> "$SAUVEGARDE_DIR/sauvegardes_log.txt"
+        
+        echo -e "${GREEN}Sauvegarde terminée : $sauvegarde_dir${NC}"
     else
         echo -e "${RED}Erreur : Le dossier spécifié n'existe pas.${NC}"
     fi
 }
 
-# Fonction pour configurer une sauvegarde automatique
+# Fonction pour configurer une sauvegarde automatique (via cron)
 configurer_sauvegarde_automatique() {
     echo -n "Entrez le chemin du dossier à sauvegarder : "
     read -r dossier
@@ -45,16 +50,26 @@ configurer_sauvegarde_automatique() {
         read -r frequence
         job="$frequence cp -r $dossier $SAUVEGARDE_DIR/sauvegarde_\$(date +'\%Y\%m\%d_\%H\%M\%S')"
         (crontab -l; echo "$job") | crontab -
+        
+        # Enregistrer la tâche cron de sauvegarde automatique dans un fichier log
+        echo "Tâche de sauvegarde automatique configurée pour $dossier à $frequence" >> "$SAUVEGARDE_DIR/sauvegardes_log.txt"
+        
         echo -e "${GREEN}Sauvegarde automatique configurée.${NC}"
     else
         echo -e "${RED}Erreur : Le dossier spécifié n'existe pas.${NC}"
     fi
 }
 
-# Fonction pour lister les tâches cron
-lister_taches_cron() {
-    echo -e "${GREEN}=== Tâches de sauvegarde ===${NC}"
-    crontab -l | grep 'cp -r' || echo "Aucune tâche de sauvegarde configurée."
+# Fonction pour lister les sauvegardes (manuelles et automatiques)
+lister_sauvegardes() {
+    echo -e "${GREEN}=== Sauvegardes existantes ===${NC}"
+
+    # Lister les sauvegardes (tâches cron)
+    if [[ -f "$SAUVEGARDE_DIR/sauvegardes_log.txt" ]]; then
+        cat "$SAUVEGARDE_DIR/sauvegardes_log.txt"
+    else
+        echo "Aucune sauvegarde manuelle effectuée."
+    fi
 }
 
 # Fonction pour supprimer une tâche cron
@@ -74,7 +89,6 @@ supprimer_tache_cron() {
     fi
 }
 
-
 # Boucle principale pour le menu
 while true; do
     menu_sauvegarde
@@ -85,7 +99,7 @@ while true; do
         2)
             configurer_sauvegarde_automatique ;;
         3)
-            lister_taches_cron ;;
+            lister_sauvegardes ;;
         4)
             supprimer_tache_cron ;;
         5)

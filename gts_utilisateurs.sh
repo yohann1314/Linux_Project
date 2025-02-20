@@ -18,7 +18,7 @@ menu_utilisateurs() {
     echo "5. Ajouter un utilisateur à un groupe"
     echo "6. Définir un quota utilisateur"
     echo "7. Configurer sudo"
-    echo "4. Quitter"
+    echo "8. Quitter"
     echo -n "Choisissez une option : "
 }
 
@@ -30,7 +30,7 @@ create_user() {
     if id "$username" &>/dev/null; then
         echo "L'utilisateur $username existe déjà."
     else
-        useradd -m "$username"
+        sudo useradd -m "$username"
         echo "Utilisateur $username créé avec succès."
     fi
 }
@@ -39,7 +39,7 @@ delete_user() {
     echo "Entrez le nom d'utilisateur à supprimer :"
     read username
     if id "$username" &>/dev/null; then
-        userdel -r "$username"
+        sudo userdel -r "$username"
         echo "Utilisateur $username supprimé avec succès."
     else
         echo "L'utilisateur $username n'existe pas."
@@ -52,7 +52,7 @@ create_group() {
     if getent group "$groupname" &>/dev/null; then
         echo "Le groupe $groupname existe déjà."
     else
-        groupadd "$groupname"
+        sudo groupadd "$groupname"
         echo "Groupe $groupname créé avec succès."
     fi
 }
